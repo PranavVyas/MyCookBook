@@ -45,18 +45,23 @@ import com.google.gson.Gson;
 import com.vyas.pranav.mycookbook.R;
 import com.vyas.pranav.mycookbook.modelsutils.MainStepsModel;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.vyas.pranav.mycookbook.recyclerutils.RecepieDescAdapter.KEY_STEP_SINGLE;
 
 public class SingleStepFragment extends Fragment implements ExoPlayer.EventListener{
 
     private static final String TAG = "SingleStepFragment";
-    PlayerView mPlayerView;
-    TextView title,description;
+    @BindView(R.id.player_single_step) PlayerView mPlayerView;
+    @BindView(R.id.text_step_no_single_step_frag) TextView title;
+    @BindView(R.id.text_desc_single_step_frag) TextView description;
+    @BindView(R.id.image_error_single_step) ImageView imageError;
     SimpleExoPlayer mPlayer;
     MainStepsModel currStep;
     MediaSessionCompat mMediaSession;
     PlaybackStateCompat.Builder mStateBuilder;
-    ScrollView scrollView;
+    @BindView(R.id.scroll_single_step) ScrollView scrollView;
     boolean isVideoAvailable = false;
     boolean isLandScape;
 
@@ -67,22 +72,21 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_single_step,container,false);
-        mPlayerView = view.findViewById(R.id.player_single_step);
+        ButterKnife.bind(this,view);
         isLandScape = getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         String stepJson = getArguments().getString(KEY_STEP_SINGLE);
         Gson gson = new Gson();
         currStep = gson.fromJson(stepJson, MainStepsModel.class);
         isVideoAvailable = !(currStep.getVideoURL().length() == 0);
-        title = view.findViewById(R.id.text_step_no_single_step_frag);
-        description = view.findViewById(R.id.text_desc_single_step_frag);
-        scrollView = view.findViewById(R.id.scroll_single_step);
-        title.setText("step No : "+currStep.getId()+"\n"+currStep.getShortDescription());
+        title.setText("Step "+currStep.getId()+" : \n"+currStep.getShortDescription());
         description.setText(currStep.getDescription());
         //checking for video
         if (!isVideoAvailable){
             mPlayerView.setVisibility(View.GONE);
+            imageError.setVisibility(View.VISIBLE);
             //Toast.makeText(getActivity(), "No Video Here", Toast.LENGTH_SHORT).show();
         }else{
+            imageError.setVisibility(View.GONE);
             readyPlayer();
             mMediaSession = createandReturnMediaSession();
             mMediaSession.setActive(true);
@@ -94,6 +98,7 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
                 scrollView.setVisibility(View.INVISIBLE);
             }
         }else{
+            imageError.setVisibility(View.VISIBLE);
             scrollView.setVisibility(View.VISIBLE);
         }
         return view;

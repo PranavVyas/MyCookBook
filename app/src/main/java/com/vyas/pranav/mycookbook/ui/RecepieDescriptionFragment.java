@@ -33,10 +33,16 @@ public class RecepieDescriptionFragment extends Fragment {
     private LinearLayout ingrediantsContainer;
     MainRecepieModel recepie;
     List<MainIngrediantsModel> ingrediants;
+    getObject mCallback;
 
     public RecepieDescriptionFragment() {
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallback = (getObject) context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,9 +63,14 @@ public class RecepieDescriptionFragment extends Fragment {
         }
         mAdapter = new RecepieDescAdapter(getActivity());
         mAdapter.setRecepie(recepie);
+        mCallback.ObjectReceived(recepie);
         rvDesc.setAdapter(mAdapter);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         rvDesc.setLayoutManager(layoutManager);
         return view;
+    }
+
+    public interface getObject{
+        void ObjectReceived(MainRecepieModel recepieModel);
     }
 }

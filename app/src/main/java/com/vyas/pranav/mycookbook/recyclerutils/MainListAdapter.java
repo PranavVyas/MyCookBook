@@ -2,6 +2,7 @@ package com.vyas.pranav.mycookbook.recyclerutils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.vyas.pranav.mycookbook.R;
 import com.vyas.pranav.mycookbook.RecepieDescriptionActivity;
@@ -17,6 +20,9 @@ import com.vyas.pranav.mycookbook.modelsutils.MainRecepieModel;
 
 import java.util.List;
 import java.util.zip.Inflater;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.MainListItemHolder>{
 
@@ -52,6 +58,14 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.MainLi
         holder.imageRecepieMaster.setOnClickListener(listener);
         holder.tvRecepieName.setOnClickListener(listener);
         holder.tvServings.setOnClickListener(listener);
+        Uri photoUri = Uri.parse(mainRecepieModelList.get(position).getImage());
+        Glide.with(context)
+                .load(photoUri)
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.waitforfood)
+                        .error(R.drawable.error_yellow)
+                .useAnimationPool(true))
+                .into(holder.imageRecepieMaster);
     }
 
     @Override
@@ -66,13 +80,12 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.MainLi
     }
 
     class MainListItemHolder extends RecyclerView.ViewHolder{
-        ImageView imageRecepieMaster;
-        TextView tvRecepieName,tvServings;
+        @BindView(R.id.image_recepie_recycler_main) ImageView imageRecepieMaster;
+        @BindView(R.id.text_recepie_recycler_main) TextView tvRecepieName;
+        @BindView(R.id.text_recepie_servings_recycler_main) TextView tvServings;
         MainListItemHolder(View itemView) {
             super(itemView);
-            imageRecepieMaster = itemView.findViewById(R.id.image_recepie_recycler_main);
-            tvRecepieName = itemView.findViewById(R.id.text_recepie_recycler_main);
-            tvServings = itemView.findViewById(R.id.text_recepie_servings_recycler_main);
+            ButterKnife.bind(this,itemView);
         }
     }
 }

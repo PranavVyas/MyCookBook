@@ -19,6 +19,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.vyas.pranav.mycookbook.recyclerutils.RecepieDescAdapter.KEY_ALL_STEPS;
 import static com.vyas.pranav.mycookbook.recyclerutils.RecepieDescAdapter.KEY_CURRENT_STEP;
 import static com.vyas.pranav.mycookbook.recyclerutils.RecepieDescAdapter.KEY_STEP_SINGLE;
@@ -30,7 +33,8 @@ public class SingleStepActivity extends AppCompatActivity {
     Gson gson;
     List<MainStepsModel> listSteps;
     SingleStepFragment stepFragment;
-    Button btnNext,btnPrevious;
+    @BindView(R.id.btn_next_step) Button btnNext;
+    @BindView(R.id.btn_prev_step) Button btnPrevious;
     Boolean isLandScape;
     public static final String KEY_SAVED_CURRENT_POS = "LastSavedCurrentStep";
     public static final String KEY_FIRST_RUN_RECEPIE = "FirstTimeRunRecepie";
@@ -38,7 +42,6 @@ public class SingleStepActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         isLandScape = this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-
         if(savedInstanceState != null){
             currentStep = savedInstanceState.getInt(KEY_SAVED_CURRENT_POS);
             //Toast.makeText(this, "Current Pos is changed and is "+currentStep, Toast.LENGTH_SHORT).show();
@@ -47,8 +50,7 @@ public class SingleStepActivity extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_step);
-        btnNext = findViewById(R.id.btn_next_step);
-        btnPrevious = findViewById(R.id.btn_prev_step);
+        ButterKnife.bind(this);
         gson = new Gson();
         fragManager = getSupportFragmentManager();
         if(getIntent().hasExtra(KEY_ALL_STEPS)) {

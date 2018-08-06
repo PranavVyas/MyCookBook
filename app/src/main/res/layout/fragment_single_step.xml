@@ -35,6 +35,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+                    <ImageView
+                        android:id="@+id/image_error_single_step"
+                        android:layout_width="match_parent"
+                        android:layout_height="196dp"
+                        android:src="@drawable/error_yellow" />
+
                     <com.google.android.exoplayer2.ui.PlayerView
                         android:id="@+id/player_single_step"
                         android:layout_width="match_parent"

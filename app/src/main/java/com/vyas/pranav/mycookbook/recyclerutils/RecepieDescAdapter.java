@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,9 @@ import com.google.gson.Gson;
 import com.vyas.pranav.mycookbook.R;
 import com.vyas.pranav.mycookbook.SingleStepActivity;
 import com.vyas.pranav.mycookbook.modelsutils.MainRecepieModel;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class RecepieDescAdapter extends RecyclerView.Adapter<RecepieDescAdapter.RecepieDescHolder>{
     Context context;
@@ -39,7 +43,7 @@ public class RecepieDescAdapter extends RecyclerView.Adapter<RecepieDescAdapter.
     public void onBindViewHolder(@NonNull RecepieDescHolder holder, final int position) {
         holder.desc.setText(recepie.getSteps().get(position).getShortDescription());
         final int currPos = position;
-        holder.no.setText("Step No "+currPos+" : ");
+        holder.no.setText("Step "+currPos+" : ");
         holder.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,12 +65,12 @@ public class RecepieDescAdapter extends RecyclerView.Adapter<RecepieDescAdapter.
     }
 
     class RecepieDescHolder extends RecyclerView.ViewHolder{
-        TextView desc,no,more;
+        @BindView(R.id.text_stepdesc_recepie_desc_recycler) TextView desc;
+        @BindView(R.id.text_stepno_recepie_desc_recycler) TextView no;
+        @BindView(R.id.text_more_recepie_desc_recycler) Button more;
         public RecepieDescHolder(View itemView) {
             super(itemView);
-            desc = itemView.findViewById(R.id.text_stepdesc_recepie_desc_recycler);
-            no = itemView.findViewById(R.id.text_stepno_recepie_desc_recycler);
-            more = itemView.findViewById(R.id.text_more_recepie_desc_recycler);
+            ButterKnife.bind(this,itemView);
         }
     }
 

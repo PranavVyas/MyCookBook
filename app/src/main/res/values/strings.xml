@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">My CookBook</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="DEFAULT_APP_NAME">App Name</string>
+    <string name="DETAIL_TWO_PANE">Please select step from side Panel to see Detailed step Here</string>
+    <string name="BTN_NEXT">Previous Step</string>
+    <string name="BTN_PREV">Next Step</string>
+    <string name="WELCOME_TEXT">Welcome  To</string>
+    <string name="TAG_INGRIDENTS">Ingrediants :</string>
+    <string name="TEXT_INGREDIANTS">Ingrediants</string>
+    <string name="BTN_HIDE_INGREDIANTS">Hide all Ingrediants</string>
+    <string name="TITLE">Title</string>
+    <string name="DESCRIPTION">Description</string>
+    <string name="RECEPIE_NAME">Recepie Name</string>
+    <string name="BTN_GO_TO_RECEPIE">Go to Recepie</string>
+    <string name="MORE">More...</string>
 </resources>

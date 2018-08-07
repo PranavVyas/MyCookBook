@@ -1,7 +1,6 @@
 package com.vyas.pranav.mycookbook;
 
 import android.content.res.Configuration;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.vyas.pranav.mycookbook.modelsutils.MainRecepieModel;
 import com.vyas.pranav.mycookbook.modelsutils.MainStepsModel;
 import com.vyas.pranav.mycookbook.ui.SingleStepFragment;
 
@@ -28,14 +26,14 @@ import static com.vyas.pranav.mycookbook.recyclerutils.RecepieDescAdapter.KEY_ST
 
 public class SingleStepActivity extends AppCompatActivity {
 
-    int currentStep = -1;
-    FragmentManager fragManager;
-    Gson gson;
-    List<MainStepsModel> listSteps;
-    SingleStepFragment stepFragment;
+    private int currentStep = -1;
+    private FragmentManager fragManager;
+    private Gson gson;
+    private List<MainStepsModel> listSteps;
+    private SingleStepFragment stepFragment;
     @BindView(R.id.btn_next_step) Button btnNext;
     @BindView(R.id.btn_prev_step) Button btnPrevious;
-    Boolean isLandScape;
+    private Boolean isLandScape;
     public static final String KEY_SAVED_CURRENT_POS = "LastSavedCurrentStep";
     public static final String KEY_FIRST_RUN_RECEPIE = "FirstTimeRunRecepie";
 
@@ -62,11 +60,9 @@ public class SingleStepActivity extends AppCompatActivity {
         }
         sendStepsDataToFragment(currentStep,listSteps);
 //        if(isLandScape){
-//            btnPrevious.setVisibility(View.GONE);
-//            btnNext.setVisibility(View.GONE);
 //        }else{
-//            btnPrevious.setVisibility(View.VISIBLE);
-//            btnNext.setVisibility(View.VISIBLE);
+//            tvTitle = findViewById(R.id.text_toolbar_single_step);
+//            tvTitle.setText("Step "+listSteps.get(currentStep).getId());
 //        }
     }
 
@@ -79,7 +75,7 @@ public class SingleStepActivity extends AppCompatActivity {
         fragManager.beginTransaction()
                 .replace(R.id.frame_main_step,stepFragment)
                 .commit();
-        checkAndSetButtons();
+        //checkAndSetButtons();
     }
 
     public void nextStepButton(View view) {

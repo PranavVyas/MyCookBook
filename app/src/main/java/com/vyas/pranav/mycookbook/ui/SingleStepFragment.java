@@ -1,18 +1,16 @@
 package com.vyas.pranav.mycookbook.ui;
 
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -39,31 +36,35 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.vyas.pranav.mycookbook.R;
 import com.vyas.pranav.mycookbook.modelsutils.MainStepsModel;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.vyas.pranav.mycookbook.RecepieDescriptionActivity.KEY_BOOLEAN_TWO_PANE;
 import static com.vyas.pranav.mycookbook.recyclerutils.RecepieDescAdapter.KEY_STEP_SINGLE;
 
-public class SingleStepFragment extends Fragment implements ExoPlayer.EventListener{
+public class SingleStepFragment extends Fragment implements Player.EventListener{
 
     private static final String TAG = "SingleStepFragment";
     @BindView(R.id.player_single_step) PlayerView mPlayerView;
     @BindView(R.id.text_step_no_single_step_frag) TextView title;
     @BindView(R.id.text_desc_single_step_frag) TextView description;
     @BindView(R.id.image_error_single_step) ImageView imageError;
-    SimpleExoPlayer mPlayer;
-    MainStepsModel currStep;
-    MediaSessionCompat mMediaSession;
-    PlaybackStateCompat.Builder mStateBuilder;
+    private SimpleExoPlayer mPlayer;
+    private MainStepsModel currStep;
+    private MediaSessionCompat mMediaSession;
+    private PlaybackStateCompat.Builder mStateBuilder;
     @BindView(R.id.scroll_single_step) ScrollView scrollView;
-    boolean isVideoAvailable = false;
-    boolean isLandScape;
+    private boolean isVideoAvailable = false;
+    private boolean isLandScape;
+    private boolean twoPane;
+    private TextView tvDefault;
 
     public SingleStepFragment() {
     }
@@ -72,14 +73,20 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_single_step,container,false);
+        //Getting data from Activity
         ButterKnife.bind(this,view);
-        isLandScape = getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        String stepJson = getArguments().getString(KEY_STEP_SINGLE);
+        String stepJson = Objects.requireNonNull(getArguments()).getString(KEY_STEP_SINGLE);
+        twoPane = getArguments().getBoolean(KEY_BOOLEAN_TWO_PANE);
+        Log.d(TAG, "onCreateView: stepJson : "+stepJson);
         Gson gson = new Gson();
         currStep = gson.fromJson(stepJson, MainStepsModel.class);
+        //Checking Screen Orientation
+        isLandScape = Objects.requireNonNull(getActivity()).getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        //Checking for video Availability
         isVideoAvailable = !(currStep.getVideoURL().length() == 0);
-        title.setText("Step "+currStep.getId()+" : \n"+currStep.getShortDescription());
+        title.setText("Step "+(currStep.getId()+1)+" : \n"+currStep.getShortDescription());
         description.setText(currStep.getDescription());
+        mPlayerView.setDefaultArtwork(BitmapFactory.decodeResource(getActivity().getResources(),R.drawable.appwidget_preview));
         //checking for video
         if (!isVideoAvailable){
             mPlayerView.setVisibility(View.GONE);
@@ -87,52 +94,91 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
             //Toast.makeText(getActivity(), "No Video Here", Toast.LENGTH_SHORT).show();
         }else{
             imageError.setVisibility(View.GONE);
-            readyPlayer();
+            mPlayerView.setVisibility(View.VISIBLE);
             mMediaSession = createandReturnMediaSession();
+            readyPlayer();
             mMediaSession.setActive(true);
         }
-        //checking for orientation
-        if(isLandScape){
-            //checking for video
-            if(isVideoAvailable) {
-                scrollView.setVisibility(View.INVISIBLE);
+        if(twoPane){
+            tvDefault = view.findViewById(R.id.text_default_frame_tab);
+        }
+        else {
+            //checking for orientation
+            if (isLandScape) {
+                //checking for video
+                if (isVideoAvailable) {
+                    mPlayerView.setVisibility(View.VISIBLE);
+                    imageError.setVisibility(View.GONE);
+                    scrollView.setVisibility(View.INVISIBLE);
+                } else {
+                    mPlayerView.setVisibility(View.GONE);
+                    imageError.setVisibility(View.VISIBLE);
+                    scrollView.setVisibility(View.VISIBLE);
+                }
+            } else {
+                //imageError.setVisibility(View.VISIBLE);
+                scrollView.setVisibility(View.VISIBLE);
             }
-        }else{
-            imageError.setVisibility(View.VISIBLE);
-            scrollView.setVisibility(View.VISIBLE);
         }
         return view;
     }
 
     public void readyPlayer(){
-        Handler mainHandler = new Handler();
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory =
-                new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        DefaultTrackSelector trackSelector =
-                new DefaultTrackSelector(videoTrackSelectionFactory);
+//        if (mPlayer == null) {
+//            // Create an instance of the ExoPlayer.
+//            TrackSelector trackSelector = new DefaultTrackSelector();
+//            LoadControl loadControl = new DefaultLoadControl();
+//            mPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector, loadControl);
+//            mPlayerView.setPlayer(mPlayer);
+//
+//            // Set the ExoPlayer.EventListener to this activity.
+//            mPlayer.addListener(this);
+//
+//            // Prepare the MediaSource.
+//            String videoUrl = currStep.getVideoURL();
+//            Uri videoUri = Uri.parse(videoUrl);
+//            String userAgent = Util.getUserAgent(getActivity(), "MyCookBook");
+//            MediaSource mediaSource = new ExtractorMediaSource(videoUri, new DefaultDataSourceFactory(
+//                    getActivity(), userAgent), new DefaultExtractorsFactory(), null, null);
+//            mPlayer.prepare(mediaSource);
+//            mPlayer.setPlayWhenReady(true);
+//        }
+        if(mPlayer == null) {
+            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+            TrackSelection.Factory videoTrackSelectionFactory =
+                    new AdaptiveTrackSelection.Factory(bandwidthMeter);
+            DefaultTrackSelector trackSelector =
+                    new DefaultTrackSelector(videoTrackSelectionFactory);
 
-        // 2. Create the player
-        mPlayer =
-                ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
+            // Create the player
+            mPlayer =
+                    ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
 
-        // Bind the player to the view.
-        mPlayerView.setPlayer(mPlayer);
-        String videoUrl = currStep.getVideoURL();
-        Uri videoUri = Uri.parse(videoUrl);
-        DefaultBandwidthMeter defaultBandwidthMeter = new DefaultBandwidthMeter();
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getActivity(),
-                Util.getUserAgent(getActivity(),"MyCookBook"),
-                defaultBandwidthMeter);
-        MediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(videoUri);
-        mPlayer.prepare(mediaSource);
-        mPlayer.setPlayWhenReady(true);
+            // Bind the player to the view.
+            mPlayerView.setPlayer(mPlayer);
+            mPlayer.addListener(this);
+            String videoUrl = currStep.getVideoURL();
+            Log.d(TAG, "readyPlayer: Getting Video Url Ready as : "+videoUrl);
+            Uri videoUri = Uri.parse(videoUrl);
+            DefaultBandwidthMeter defaultBandwidthMeter = new DefaultBandwidthMeter();
+            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(Objects.requireNonNull(getActivity()),
+                    Util.getUserAgent(getActivity(), "MyCookBook"),
+                    defaultBandwidthMeter);
+            MediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(videoUri);
+            mPlayer.prepare(mediaSource);
+            mPlayer.setPlayWhenReady(true);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        releasePlayer();
     }
 
     public MediaSessionCompat createandReturnMediaSession(){
-        if(mMediaSession == null){
-            mMediaSession = new MediaSessionCompat(getActivity(),TAG);
+            mMediaSession = new MediaSessionCompat(Objects.requireNonNull(getActivity()),TAG);
             mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
                     MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
             mMediaSession.setMediaButtonReceiver(null);
@@ -144,19 +190,15 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
             mMediaSession.setPlaybackState(mStateBuilder.build());
             mMediaSession.setCallback(new mMediaSessionCallbacks());
             return mMediaSession;
-        }
-        return mMediaSession;
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        releasePlayer();
     }
 
     void releasePlayer(){
-        if(isVideoAvailable) {
+        if (mPlayer != null) {
+            //playbackPosition = mPlayer.getCurrentPosition();
+            //currentWindow = mPlayer.getCurrentWindowIndex();
+            //playWhenReady = mPlayer.getPlayWhenReady();
             mPlayer.release();
+            mPlayer = null;
             mMediaSession.setActive(false);
             Log.d(TAG, "releasePlayer: Player Released Sucesfully");
         }
@@ -174,9 +216,7 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
 
     @Override
     public void onLoadingChanged(boolean isLoading) {
-        if (isLoading){
-            //Toast.makeText(getActivity(), "Loading", Toast.LENGTH_SHORT).show();
-        }
+
     }
 
     @Override
@@ -184,9 +224,15 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
         if((playbackState == Player.STATE_READY) && playWhenReady){
             mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
                     mPlayer.getCurrentPosition(), 1f);
+            Log.d(TAG, "onPlayerStateChanged: Playing Video Now");
         } else if((playbackState == Player.STATE_READY)){
             mStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
                     mPlayer.getCurrentPosition(), 1f);
+            Log.d(TAG, "onPlayerStateChanged: Video Paused just now");
+        } else if(playbackState == PlaybackStateCompat.STATE_CONNECTING){
+            Toast.makeText(getActivity(), "Connecting Please Wait...", Toast.LENGTH_SHORT).show();
+        } else if (playbackState == PlaybackStateCompat.STATE_BUFFERING){
+            Toast.makeText(getActivity(), "Buffering Now...", Toast.LENGTH_SHORT).show();
         }
         mMediaSession.setPlaybackState(mStateBuilder.build());
     }
@@ -203,7 +249,7 @@ public class SingleStepFragment extends Fragment implements ExoPlayer.EventListe
 
     @Override
     public void onPlayerError(ExoPlaybackException error) {
-
+        Toast.makeText(getActivity(), "Error Occured :"+error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     @Override

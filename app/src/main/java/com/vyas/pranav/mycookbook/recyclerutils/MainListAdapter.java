@@ -1,5 +1,7 @@
 package com.vyas.pranav.mycookbook.recyclerutils;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,24 +12,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
+import com.vyas.pranav.mycookbook.IngrediantWidget;
 import com.vyas.pranav.mycookbook.R;
 import com.vyas.pranav.mycookbook.RecepieDescriptionActivity;
+import com.vyas.pranav.mycookbook.extrautils.SharedPrefs;
 import com.vyas.pranav.mycookbook.modelsutils.MainRecepieModel;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.MainListItemHolder>{
 
-    Context context;
-    List<MainRecepieModel> mainRecepieModelList;
+    private Context context;
+    private List<MainRecepieModel> mainRecepieModelList;
     public static final String KEY_SINGLE_RECEPIE_JSON = "SingleRecepieJson";
 
     public MainListAdapter(Context context) {
@@ -43,28 +46,13 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.MainLi
 
     @Override
     public void onBindViewHolder(@NonNull MainListItemHolder holder, final int position) {
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, RecepieDescriptionActivity.class);
-                Gson gson = new Gson();
-                String RecepieSingleJson = gson.toJson(mainRecepieModelList.get(position));
-                intent.putExtra(KEY_SINGLE_RECEPIE_JSON,RecepieSingleJson);
-                context.startActivity(intent);
-            }
-        };
         holder.tvRecepieName.setText(mainRecepieModelList.get(position).getName());
         holder.tvServings.setText("Servings : "+mainRecepieModelList.get(position).getServings());
-        holder.imageRecepieMaster.setOnClickListener(listener);
-        holder.tvRecepieName.setOnClickListener(listener);
-        holder.tvServings.setOnClickListener(listener);
         Uri photoUri = Uri.parse(mainRecepieModelList.get(position).getImage());
-        Glide.with(context)
+        Picasso.get()
                 .load(photoUri)
-                .apply(new RequestOptions()
-                        .placeholder(R.drawable.waitforfood)
-                        .error(R.drawable.error_yellow)
-                .useAnimationPool(true))
+                .error(R.drawable.default_food)
+                .placeholder(R.drawable.default_food)
                 .into(holder.imageRecepieMaster);
     }
 
@@ -79,13 +67,38 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.MainLi
         notifyDataSetChanged();
     }
 
-    class MainListItemHolder extends RecyclerView.ViewHolder{
+    void updatewidget(String RecepieSingleJson){
+        SharedPrefs.addRecepieToSharedPrefs(context,RecepieSingleJson);
+        Intent updateIntent = new Intent(context, IngrediantWidget.class);
+        updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(context)
+                .getAppWidgetIds(new ComponentName(context, IngrediantWidget.class));
+        Toast.makeText(context, "Updated Data Now", Toast.LENGTH_SHORT).show();
+        updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        context.sendBroadcast(updateIntent);
+
+    }
+
+    class MainListItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.image_recepie_recycler_main) ImageView imageRecepieMaster;
         @BindView(R.id.text_recepie_recycler_main) TextView tvRecepieName;
         @BindView(R.id.text_recepie_servings_recycler_main) TextView tvServings;
         MainListItemHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(context, RecepieDescriptionActivity.class);
+            Gson gson = new Gson();
+            String RecepieSingleJson = gson.toJson(mainRecepieModelList.get(getAdapterPosition()));
+            intent.putExtra(KEY_SINGLE_RECEPIE_JSON,RecepieSingleJson);
+            updatewidget(RecepieSingleJson);
+            context.startActivity(intent);
         }
     }
+
+
 }

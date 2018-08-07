@@ -20,16 +20,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/btn_bottom"
             android:onClick="previousStepButton"
-            android:text="Previous Step" />
+            android:textColor="#ffffff"
+            android:text="@string/BTN_PREV" />
 
         <Button
             android:id="@+id/btn_next_step"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:textColor="#ffffff"
+            android:background="@drawable/btn_bottom"
             android:onClick="nextStepButton"
-            android:text="Next Step" />
+            android:text="@string/BTN_NEXT" />
     </LinearLayout>
 
     <FrameLayout

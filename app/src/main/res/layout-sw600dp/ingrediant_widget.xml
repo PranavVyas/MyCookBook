@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#b3e5fc"
+    android:padding="2dp">
+
+    <TextView
+        android:id="@+id/text_recepie_title_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/RECEPIE_NAME"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:layout_alignParentTop="true"/>
+
+    <TextView
+        android:id="@+id/text_ingrediants_title_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/TEXT_INGREDIANTS"
+        android:layout_marginTop="32dp"
+        android:layout_alignTop="@+id/text_recepie_title_widget"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/text_container_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginTop="24dp"
+        android:layout_alignTop="@id/text_ingrediants_title_widget"
+        android:textAlignment="textStart" />
+
+    <Button
+        android:id="@+id/btn_widget"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/btn_rounded_pink"
+        android:padding="8dp"
+        android:text="@string/BTN_GO_TO_RECEPIE"
+        android:textAlignment="center" />
+
+</RelativeLayout>

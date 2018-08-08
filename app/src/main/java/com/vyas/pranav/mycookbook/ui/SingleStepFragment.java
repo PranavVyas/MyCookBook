@@ -44,6 +44,7 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 import com.vyas.pranav.mycookbook.R;
 import com.vyas.pranav.mycookbook.extrautils.NetworkUtils;
 import com.vyas.pranav.mycookbook.modelsutils.MainStepsModel;
@@ -54,6 +55,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
+import static com.vyas.pranav.mycookbook.R.drawable.no_internet;
 import static com.vyas.pranav.mycookbook.RecepieDescriptionActivity.KEY_BOOLEAN_TWO_PANE;
 import static com.vyas.pranav.mycookbook.recyclerutils.RecepieDescAdapter.KEY_STEP_SINGLE;
 
@@ -143,10 +145,12 @@ public class SingleStepFragment extends Fragment implements Player.EventListener
             if (!NetworkUtils.hasInternetConnection(getContext())) {
                 Toast.makeText(getContext(), "No Internet Connection Available", Toast.LENGTH_LONG).show();
                 mPlayerView.setVisibility(View.GONE);
+                Picasso.get().load(R.drawable.no_internet).into(imageError);
                 imageError.setVisibility(View.VISIBLE);
             } else {
                 Toast.makeText(getContext(), "Connection Sucessfull", Toast.LENGTH_SHORT).show();
                 mPlayerView.setVisibility(View.VISIBLE);
+                Picasso.get().load(R.drawable.ic_no_video_laptop).into(imageError);
                 imageError.setVisibility(View.GONE);
             }
         }
@@ -281,7 +285,6 @@ public class SingleStepFragment extends Fragment implements Player.EventListener
 
     @Override
     public void onPlayerError(ExoPlaybackException error) {
-        //TODO Handle Error
         Toast.makeText(getActivity(), "Error Occured :" + error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 

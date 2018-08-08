@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.text.Html;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -34,20 +35,25 @@ public class IngrediantWidget extends AppWidgetProvider {
             PendingIntent pendingIntentToOpenActivity = PendingIntent.getActivity(context,0,intent,0);
             views.setOnClickPendingIntent(R.id.btn_widget,pendingIntentToOpenActivity);
         }else{
-            recepieJson = SharedPrefs.getCurrentRecepieFromPrefs(context);
             Gson gson = new Gson();
+            recepieJson = SharedPrefs.getCurrentRecepieFromPrefs(context);
             recepie = gson.fromJson(recepieJson, MainRecepieModel.class);
             ingrediantsList = recepie.getIngredients();
             recepieName = recepie.getName();
-            for(int i = 0; i < ingrediantsList.size();i++){
-                MainIngrediantsModel ingrediant_x = ingrediantsList.get(i);
-                String currIngrediant = (i+1)+": "+ingrediant_x.getIngredient();
-                ingrediants = ingrediants + currIngrediant+"\n";
+            //Setting widget Text View
+            int index = 1;
+            String ingrediantsData = "";
+            for (MainIngrediantsModel ingrediant_x : ingrediantsList){
+                String ingrediantDetail = index+": <b>"+ingrediant_x.getIngredient()+"</b> : "+ingrediant_x.getQuantity()+" "+ingrediant_x.getMeasure();
+                ingrediantsData = ingrediantsData+ingrediantDetail+"<br>";
+                index++;
             }
-            Toast.makeText(context, "Updated Widgets Now..................", Toast.LENGTH_SHORT).show();
-            views.setTextViewText(R.id.text_container_widget,ingrediants);
+
+            //Toast.makeText(context, "Updated Widgets Now..................", Toast.LENGTH_SHORT).show();
+            views.setTextViewText(R.id.text_container_widget,Html.fromHtml(ingrediantsData));
             views.setTextViewText(R.id.text_recepie_title_widget,recepieName);
-            //TODO Format Widget finely
+
+            //To Open Activity Directly from Widget
             Intent intent = new Intent(context,RecepieDescriptionActivity.class);
             intent.putExtra(KEY_SINGLE_RECEPIE_JSON,recepieJson);
             PendingIntent pendingIntentToOpenActivity = PendingIntent.getActivity(context,0,intent,0);

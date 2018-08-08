@@ -50,4 +50,6 @@ dependencies {
     implementation 'at.blogc:expandabletextview:1.0.5'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    //Android Fast Networking library
+    implementation 'com.amitshekhar.android:android-networking:1.0.2'
 }

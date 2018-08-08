@@ -84,9 +84,9 @@ public class RecepieDescriptionFragment extends Fragment {
         for (MainIngrediantsModel ingrediant_x : ingrediants){
             String ingrediantDetail = index+": <b>"+ingrediant_x.getIngredient()+"</b> : "+ingrediant_x.getQuantity()+" "+ingrediant_x.getMeasure();
             ingrediantsData = ingrediantsData+ingrediantDetail+"<br>";
-            ingrediantsContainer.setText(Html.fromHtml(ingrediantsData));
             index++;
         }
+        ingrediantsContainer.setText(Html.fromHtml(ingrediantsData));
         ingrediantsContainer.expand();
         btnToogle.setOnClickListener(new View.OnClickListener()
         {
@@ -110,7 +110,6 @@ public class RecepieDescriptionFragment extends Fragment {
     RecepieDescAdapter.OnTapListener tapped = new RecepieDescAdapter.OnTapListener() {
         @Override
         public void OnItemClick(int stepNo, String StepJsonFull) {
-            Toast.makeText(getContext(), "Tapped Bro", Toast.LENGTH_SHORT).show();
             mItemClicked.itemClicked(stepNo,StepJsonFull);
         }
     };

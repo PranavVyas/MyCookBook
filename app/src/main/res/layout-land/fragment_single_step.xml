@@ -90,5 +90,4 @@
             </android.support.v7.widget.CardView>
         </LinearLayout>
     </ScrollView>
-    <!--TODO Setup Layout Nicely-->
 </android.support.constraint.ConstraintLayout>

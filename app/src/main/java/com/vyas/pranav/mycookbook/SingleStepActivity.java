@@ -56,7 +56,7 @@ public class SingleStepActivity extends AppCompatActivity {
             Type typeOfMenu = new TypeToken<ArrayList<MainStepsModel>>(){}.getType();
             listSteps = gson.fromJson(allStepsJson, typeOfMenu);
         }else{
-            Toast.makeText(this, "Error Occured", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error Occured Intent Not Received", Toast.LENGTH_SHORT).show();
         }
         sendStepsDataToFragment(currentStep,listSteps);
 //        if(isLandScape){
@@ -83,7 +83,7 @@ public class SingleStepActivity extends AppCompatActivity {
             currentStep++;
             sendStepsDataToFragment(currentStep,listSteps);
         }else{
-            Toast.makeText(this, "Exceeds no of Steps", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Already At last Step", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -92,7 +92,7 @@ public class SingleStepActivity extends AppCompatActivity {
             currentStep--;
             sendStepsDataToFragment(currentStep,listSteps);
         }else{
-            Toast.makeText(this, "Less than no of Steps", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Already at First Stage", Toast.LENGTH_SHORT).show();
         }
     }
 

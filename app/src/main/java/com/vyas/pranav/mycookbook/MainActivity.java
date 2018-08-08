@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity{
                         .withListener(new PermissionListener() {
                             @Override
                             public void onPermissionGranted(PermissionGrantedResponse response) {
-                                Toast.makeText(MainActivity.this, "Granted", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(MainActivity.this, "Granted", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override

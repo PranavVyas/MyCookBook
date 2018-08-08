@@ -53,7 +53,7 @@ public class RecepieDescriptionActivity extends AppCompatActivity implements Rec
                     .replace(R.id.frame_recepie_recipie_description,recepieFragment)
                     .commit();
         }else{
-            Toast.makeText(this, "Error Occured", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error Occured No Intent Received", Toast.LENGTH_SHORT).show();
         }
         setSupportActionBar(toolbarDesc);
         if(getSupportActionBar() != null){

@@ -73,7 +73,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.MainLi
         updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         int[] ids = AppWidgetManager.getInstance(context)
                 .getAppWidgetIds(new ComponentName(context, IngrediantWidget.class));
-        Toast.makeText(context, "Updated Data Now", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "Updated Data Now", Toast.LENGTH_SHORT).show();
         updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         context.sendBroadcast(updateIntent);
 

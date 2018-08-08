@@ -24,7 +24,6 @@ import butterknife.ButterKnife;
 public class RecepieDescAdapter extends RecyclerView.Adapter<RecepieDescAdapter.RecepieDescHolder>{
     private Context context;
     private MainRecepieModel recepie;
-    //TODO
     private OnTapListener mCallback;
     private boolean twoPane;
 
@@ -34,7 +33,6 @@ public class RecepieDescAdapter extends RecyclerView.Adapter<RecepieDescAdapter.
 
     public RecepieDescAdapter(Context ct,OnTapListener mCallback) {
         this.context = ct;
-        //TODO
         this.mCallback = mCallback;
     }
 
@@ -89,7 +87,6 @@ public class RecepieDescAdapter extends RecyclerView.Adapter<RecepieDescAdapter.
             Gson gson = new Gson();
             String StepJson = gson.toJson(recepie.getSteps());
             if(twoPane){
-                //TODO
                 mCallback.OnItemClick(getAdapterPosition(),StepJson);
             }else{
                 Intent intent = new Intent(context,SingleStepActivity.class);

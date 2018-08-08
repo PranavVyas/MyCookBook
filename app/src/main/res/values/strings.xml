@@ -2,8 +2,8 @@
     <string name="app_name">My CookBook</string>
     <string name="DEFAULT_APP_NAME">App Name</string>
     <string name="DETAIL_TWO_PANE">Please select step from side Panel to see Detailed step Here</string>
-    <string name="BTN_NEXT">Previous Step</string>
-    <string name="BTN_PREV">Next Step</string>
+    <string name="BTN_PREV">Previous Step</string>
+    <string name="BTN_NEXT">Next Step</string>
     <string name="WELCOME_TEXT">Welcome  To</string>
     <string name="TAG_INGRIDENTS">Ingrediants :</string>
     <string name="TEXT_INGREDIANTS">Ingrediants</string>
@@ -13,4 +13,5 @@
     <string name="RECEPIE_NAME">Recepie Name</string>
     <string name="BTN_GO_TO_RECEPIE">Go to Recepie</string>
     <string name="MORE">More...</string>
+    <string name="PLEASE_WAIT">Please Wait...</string>
 </resources>

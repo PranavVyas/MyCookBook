@@ -6,6 +6,13 @@
     tools:context=".ui.MainListFragment"
     android:background="@drawable/bkg_2">
 
+    <ImageView
+        android:id="@+id/image_error_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_no_video_laptop" />
+
+    <!--TODO CREATE SEPRATE FILE FOR IMAGE-->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_main_frag_main"
         android:layout_width="match_parent"

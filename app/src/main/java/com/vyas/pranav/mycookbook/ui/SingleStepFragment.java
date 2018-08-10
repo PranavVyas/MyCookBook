@@ -81,7 +81,6 @@ public class SingleStepFragment extends Fragment{
     @BindView(R.id.frame_player_single_step_frag)
     FrameLayout frame;
     private SimpleExoPlayer mPlayer;
-    //TODO Ste the onPause and On Resume perfectly for rotation
     private MainStepsModel currStep;
     private MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mStateBuilder;
@@ -115,7 +114,7 @@ public class SingleStepFragment extends Fragment{
             mCurrentPosition = savedInstanceState.getLong(KEY_LAST_POSITION);
             mPlayWhenReady = savedInstanceState.getBoolean(KEY_LAST_PLAY_WHEN_READY);
             mResumeWindow = savedInstanceState.getInt(KEY_CURRENT_WINDWOW_POSITION);
-            ALog.d( "onCreateView: getting values and saving them as mPlayWhenReady : " +mPlayWhenReady+ " & mCurrentPosition : " + mCurrentPosition);
+            ALog.d( "Getting values and saving them as ","mPlayWhenReady : " +mPlayWhenReady, "mCurrentPosition : " + mCurrentPosition);
         }
         ButterKnife.bind(this, view); //Binding Views
         //Getting data From activity
@@ -159,7 +158,6 @@ public class SingleStepFragment extends Fragment{
         // Bind the player to the view.
         mPlayerView.setPlayer(mPlayer);
         //Adding Listener to player
-        //TODO Add Event listener here
         //mPlayer.addListener(this);
         ALog.d( "initlizePlayer: Sending Values to LoadMedia Function: mPlayWhenReady : " + (mPlayWhenReady == true ? "TRUE" : "FALSE") + " mCurrentPosition : " + mCurrentPosition);
         loadMediaToPlayer(currStep.getVideoURL(), mPlayWhenReady, mCurrentPosition);
@@ -253,7 +251,7 @@ public class SingleStepFragment extends Fragment{
             outState.putLong(KEY_LAST_POSITION, mCurrentPosition);
             outState.putBoolean(KEY_LAST_PLAY_WHEN_READY, mPlayWhenReady);
             outState.putInt(KEY_CURRENT_WINDWOW_POSITION, mResumeWindow);
-            ALog.d( "onSaveInstanceState: Putting Values in SavedInstanceStae Bundle: mPlayWhenReady : "+mPlayWhenReady+" & mCurrentPosition : " + mCurrentPosition);
+            ALog.d( "Putting values to onSavedInstanceState as ","mPlayWhenReady : " +mPlayWhenReady, "mCurrentPosition : " + mCurrentPosition);
         }
         super.onSaveInstanceState(outState);
     }
@@ -266,7 +264,7 @@ public class SingleStepFragment extends Fragment{
             mCurrentPosition = mPlayer.getCurrentPosition();
             mPlayWhenReady = mPlayer.getPlayWhenReady();
             mResumeWindow = mPlayer.getCurrentWindowIndex();
-            ALog.d( "onPause: "+"Data saved in On Pause",mPlayWhenReady,mCurrentPosition);
+            ALog.d( "Saving Data in variables as ","mPlayWhenReady : " +mPlayWhenReady, "mCurrentPosition : " + mCurrentPosition);
         }
         if (Util.SDK_INT <= 23) {
             // releasing player
@@ -293,7 +291,7 @@ public class SingleStepFragment extends Fragment{
             DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
             DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(getContext(), null, httpDataSourceFactory);
             Uri videoUri = Uri.parse(currStep.getVideoURL());
-            ALog.d( "onResume: Getting Video Url as "+videoUri.toString());
+            ALog.d( "Getting Video Url as "+videoUri.toString());
             mVideoResource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(videoUri);
             initExoPlayer();
         }
@@ -308,23 +306,22 @@ public class SingleStepFragment extends Fragment{
             mPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
             // Bind the player to the view.
             mPlayerView.setPlayer(mPlayer);
-            ALog.d("Created mPlayer in mPlayerView");
+            ALog.d("Created mPlayer in mPlayerView successfully");
         }
     }
 
     private void initExoPlayer() {
         getPlayerInstance();
+        mPlayer.prepare(mVideoResource);
         if (mCurrentPosition == 0) {
             mPlayer.setPlayWhenReady(mPlayWhenReady);
-            ALog.d( "initExoPlayer: Creating Video Playing with mPlaywhenReady : "+mPlayWhenReady + " & mCurrentPosition : "+(getActivity().getIntent().getExtras().getLong(KEY_LAST_POSITION)));
-            mPlayerView.getPlayer().seekTo(mResumeWindow, mCurrentPosition);
+            ALog.d( "onCreateView: Creating new instance as ","mPlayWhenReady : " +mPlayWhenReady, "mCurrentPosition : " + mCurrentPosition);
+            mPlayerView.getPlayer().seekTo(mCurrentPosition);
         } else{
             mPlayer.setPlayWhenReady(mPlayWhenReady);
-            ALog.d( "initExoPlayer: Resuming Video Playing with mPlaywhenReady : "+mPlayWhenReady + " & mCurrentPosition : "+(getActivity().getIntent().getExtras().getLong(KEY_LAST_POSITION)));
-            mPlayerView.getPlayer().seekTo(mResumeWindow, mCurrentPosition);
+            ALog.d( "Getting values and Giving them to Start Activity as ","mPlayWhenReady : " +mPlayWhenReady, "mCurrentPosition : " + mCurrentPosition);
+            mPlayerView.getPlayer().seekTo(mCurrentPosition);
         }
-        mPlayer.prepare(mVideoResource);
-        mPlayer.setPlayWhenReady(mPlayWhenReady);
         mPlayer.addListener(new Player.EventListener() {
             @Override
             public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
@@ -418,7 +415,6 @@ public class SingleStepFragment extends Fragment{
             else scrollView.setVisibility(VISIBLE);
             //loadMediaToPlayer(currStep.getVideoURL());
         }
-        //TODO Check if twoPan Layout is coming as expected or not
     }
 
     private void populateUI(){

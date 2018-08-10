@@ -61,8 +61,11 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_no_video_laptop" />
-                            <entry key="sourceFile" value="F:\Development\Asset For My Cook Book\404-error-concept-with-laptop\no_video_laptop.svg" />
+                            <entry key="height" value="1080" />
+                            <entry key="outputName" value="ic_play_button" />
+                            <entry key="overrideSize" value="true" />
+                            <entry key="sourceFile" value="C:\Users\Pro\Downloads\Compressed\Technology-background-with-gradient-colors\play_button.svg" />
+                            <entry key="width" value="1920" />
                           </map>
                         </option>
                       </PersistentState>

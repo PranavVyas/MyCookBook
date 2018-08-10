@@ -1,9 +1,13 @@
 package com.vyas.pranav.mycookbook;
 
+import android.app.PictureInPictureParams;
 import android.content.res.Configuration;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Rational;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -24,7 +28,7 @@ import static com.vyas.pranav.mycookbook.recyclerutils.RecepieDescAdapter.KEY_AL
 import static com.vyas.pranav.mycookbook.recyclerutils.RecepieDescAdapter.KEY_CURRENT_STEP;
 import static com.vyas.pranav.mycookbook.recyclerutils.RecepieDescAdapter.KEY_STEP_SINGLE;
 
-public class SingleStepActivity extends AppCompatActivity {
+public class SingleStepActivity extends AppCompatActivity implements SingleStepFragment.fromSingleStepFragement{
 
     private int currentStep = -1;
     private FragmentManager fragManager;
@@ -119,5 +123,20 @@ public class SingleStepActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_SAVED_CURRENT_POS,currentStep);
         outState.putBoolean(KEY_FIRST_RUN_RECEPIE,true);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        int width = 16;
+        int hight = 9;
+        PictureInPictureParams PipParams = new PictureInPictureParams.Builder().setAspectRatio(new Rational(width,hight)).build();
+        enterPictureInPictureMode(PipParams);
+    }
+
+    @Override
+    public void stepReceived(boolean VideoAvailability, boolean isLandscapeOrientation, boolean twoPaneAvailability) {
+
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.vyas.pranav.mycookbook">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,7 +15,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop"/>
         <activity
             android:name=".RecepieDescriptionActivity"
             android:launchMode="singleTop"
@@ -22,7 +23,9 @@
         <activity
             android:name=".SingleStepActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".RecepieDescriptionActivity" />
+            android:parentActivityName=".RecepieDescriptionActivity"
+            android:supportsPictureInPicture="true"
+            tools:targetApi="n" />
 
         <receiver android:name=".IngrediantWidget">
             <intent-filter>
@@ -63,6 +66,10 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANG"/>
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".extrautils.WidgetUpdateService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

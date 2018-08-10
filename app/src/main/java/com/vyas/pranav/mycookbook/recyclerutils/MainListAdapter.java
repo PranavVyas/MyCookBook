@@ -69,14 +69,7 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.MainLi
 
     void updatewidget(String RecepieSingleJson){
         SharedPrefs.addRecepieToSharedPrefs(context,RecepieSingleJson);
-        Intent updateIntent = new Intent(context, IngrediantWidget.class);
-        updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        int[] ids = AppWidgetManager.getInstance(context)
-                .getAppWidgetIds(new ComponentName(context, IngrediantWidget.class));
-        //Toast.makeText(context, "Updated Data Now", Toast.LENGTH_SHORT).show();
-        updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-        context.sendBroadcast(updateIntent);
-
+        IngrediantWidget.UpdateWidget(context);
     }
 
     class MainListItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

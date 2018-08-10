@@ -23,7 +23,7 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
-        android:layout_height="56dp"
+        android:layout_height="0dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,20 +34,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textColor="#ffffff"
-            android:onClick="previousStepButton"
             android:background="@drawable/btn_bottom"
-            android:text="@string/BTN_PREV" />
+            android:onClick="previousStepButton"
+            android:text="@string/BTN_PREV"
+            android:textColor="#ffffff" />
 
         <Button
             android:id="@+id/btn_next_step"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textColor="#ffffff"
             android:background="@drawable/btn_bottom"
             android:onClick="nextStepButton"
-            android:text="@string/BTN_NEXT" />
+            android:text="@string/BTN_NEXT"
+            android:textColor="#ffffff" />
     </LinearLayout>
 
     <FrameLayout

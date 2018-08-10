@@ -57,7 +57,11 @@
                         android:src="@color/colorAccent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:fastforward_increment="1000"
+                        app:rewind_increment="1000"
+                        app:controller_layout_id="@layout/exoplayer_controls"/>
+
                 </FrameLayout>
 
                 <android.support.v7.widget.CardView

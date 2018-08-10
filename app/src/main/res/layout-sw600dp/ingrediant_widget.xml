@@ -1,41 +1,44 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#b3e5fc"
+    android:orientation="vertical"
     android:padding="2dp">
 
     <TextView
         android:id="@+id/text_recepie_title_widget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_gravity="center"
+        android:layout_marginTop="8dp"
         android:text="@string/RECEPIE_NAME"
         android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="8dp"
-        android:layout_alignParentTop="true"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/text_ingrediants_title_widget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/TEXT_INGREDIANTS"
-        android:layout_marginTop="32dp"
         android:layout_alignTop="@+id/text_recepie_title_widget"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:text="@string/TEXT_INGREDIANTS"
         android:textAlignment="center" />
 
-    <TextView
-        android:id="@+id/text_container_widget"
+    <ListView
+        android:id="@+id/listViewWidget"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:layout_marginTop="24dp"
+        android:layout_height="match_parent"
         android:layout_alignTop="@id/text_ingrediants_title_widget"
-        android:textAlignment="textStart" />
+        android:layout_marginTop="24dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_alignBottom="@id/btn_widget"
+        android:layout_marginBottom="32dp"
+        android:paddingBottom="2dp"/>
 
     <Button
         android:id="@+id/btn_widget"

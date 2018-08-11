@@ -1,8 +1,9 @@
-package com.vyas.pranav.mycookbook.extrautils;
+package com.vyas.pranav.mycookbook.widgetutils;
 
-import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.widget.RemoteViewsService;
+
+import com.vyas.pranav.mycookbook.widgetutils.WidgetLListAdapter;
 
 public class WidgetUpdateService extends RemoteViewsService {
 

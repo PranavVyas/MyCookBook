@@ -11,7 +11,7 @@
     <string name="TITLE">Title</string>
     <string name="DESCRIPTION">Description</string>
     <string name="RECEPIE_NAME">Recepie Name</string>
-    <string name="BTN_GO_TO_RECEPIE">Go to Recepie</string>
+    <string name="BTN_GO_TO_RECEPIE">Go To Recepie List</string>
     <string name="MORE">More...</string>
     <string name="PLEASE_WAIT">Please Wait...</string>
 </resources>

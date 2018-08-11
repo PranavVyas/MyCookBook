@@ -1,4 +1,4 @@
-package com.vyas.pranav.mycookbook;
+package com.vyas.pranav.mycookbook.ui;
 
 import android.Manifest;
 import android.support.v4.app.FragmentManager;
@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -16,7 +15,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.single.PermissionListener;
-import com.vyas.pranav.mycookbook.ui.MainListFragment;
+import com.vyas.pranav.mycookbook.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

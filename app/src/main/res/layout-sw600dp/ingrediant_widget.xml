@@ -6,25 +6,12 @@
     android:padding="2dp">
 
     <TextView
-        android:id="@+id/text_recepie_title_widget"
+        android:id="@+id/text_ingrediants_title_widget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:text="@string/RECEPIE_NAME"
-        android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/text_ingrediants_title_widget"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/text_recepie_title_widget"
-        android:layout_gravity="center"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="2dp"
         android:text="@string/TEXT_INGREDIANTS"
         android:textAlignment="center" />
 

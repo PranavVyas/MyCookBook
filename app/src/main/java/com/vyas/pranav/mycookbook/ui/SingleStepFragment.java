@@ -13,18 +13,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidnetworking.model.Progress;
 import com.blankj.ALog;
-import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -61,7 +61,7 @@ import butterknife.ButterKnife;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static com.vyas.pranav.mycookbook.RecepieDescriptionActivity.KEY_BOOLEAN_TWO_PANE;
+import static com.vyas.pranav.mycookbook.ui.RecepieDescriptionActivity.KEY_BOOLEAN_TWO_PANE;
 import static com.vyas.pranav.mycookbook.recyclerutils.RecepieDescAdapter.KEY_STEP_SINGLE;
 
 public class SingleStepFragment extends Fragment{
@@ -70,6 +70,7 @@ public class SingleStepFragment extends Fragment{
     private static final String KEY_LAST_PLAY_WHEN_READY = "LastPlayWhenReady";
     private static final String KEY_LAST_POSITION = "LastPosition";
     private static final String KEY_CURRENT_WINDWOW_POSITION = "CurrentWindowIndex";
+    private static final String KEY_LAST_STEP = "LastStep";
     @BindView(R.id.player_single_step)
     PlayerView mPlayerView;
     @BindView(R.id.text_step_no_single_step_frag)
@@ -94,7 +95,9 @@ public class SingleStepFragment extends Fragment{
     private static boolean mPlayWhenReady;
     private static long mCurrentPosition;
     private static int mResumeWindow;
+    private static int mLastStep;
     private MediaSource mVideoResource;
+    @BindView(R.id.progress_buffering_single_step_frag) ProgressBar progressBuffer;
 
     public SingleStepFragment() {
     }
@@ -114,6 +117,7 @@ public class SingleStepFragment extends Fragment{
             mCurrentPosition = savedInstanceState.getLong(KEY_LAST_POSITION);
             mPlayWhenReady = savedInstanceState.getBoolean(KEY_LAST_PLAY_WHEN_READY);
             mResumeWindow = savedInstanceState.getInt(KEY_CURRENT_WINDWOW_POSITION);
+            mLastStep = savedInstanceState.getInt(KEY_LAST_STEP);
             ALog.d( "Getting values and saving them as ","mPlayWhenReady : " +mPlayWhenReady, "mCurrentPosition : " + mCurrentPosition);
         }
         ButterKnife.bind(this, view); //Binding Views
@@ -140,45 +144,12 @@ public class SingleStepFragment extends Fragment{
                 Picasso.get().load(R.drawable.no_internet).into(imageError);
                 imageError.setVisibility(VISIBLE);
             } else {
-                Toast.makeText(getContext(), "Connection Sucessfull", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Connection Sucessfull", Toast.LENGTH_SHORT).show();
                 mPlayerView.setVisibility(VISIBLE);
                 Picasso.get().load(R.drawable.ic_no_video_laptop).into(imageError);
                 imageError.setVisibility(GONE);
             }
         }
-    }
-
-    public void initlizePlayer() {
-        //Default Steup of Player
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        DefaultTrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-        // Create the player
-        mPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
-        // Bind the player to the view.
-        mPlayerView.setPlayer(mPlayer);
-        //Adding Listener to player
-        //mPlayer.addListener(this);
-        ALog.d( "initlizePlayer: Sending Values to LoadMedia Function: mPlayWhenReady : " + (mPlayWhenReady == true ? "TRUE" : "FALSE") + " mCurrentPosition : " + mCurrentPosition);
-        loadMediaToPlayer(currStep.getVideoURL(), mPlayWhenReady, mCurrentPosition);
-    }
-
-    public void loadMediaToPlayer(String videoUrl, boolean playOrNot, long defaultPosition) {
-        //Creating Media Source
-        Uri videoUri = Uri.parse(videoUrl);
-        DefaultBandwidthMeter defaultBandwidthMeter = new DefaultBandwidthMeter();
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(Objects.requireNonNull(getActivity()),
-                Util.getUserAgent(getActivity(), "MyCookBook"),
-                defaultBandwidthMeter);
-        MediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(videoUri);
-        //Attach Media Source with Player
-        mPlayer.prepare(mediaSource);
-        //Passing data to Parent Activity
-        //ALog.d( "loadMediaToPlayer: Received Values : " + (playOrNot == true ? "TRUE" : "FALSE") + " TIME : " + defaultPosition);
-        mPlayer.setPlayWhenReady(playOrNot);
-        mPlayer.seekTo(defaultPosition);
-        mCallback.stepReceived(isVideoAvailable, isLandScape, twoPane);
     }
 
     public void createAndStartMediaSession() {
@@ -200,6 +171,8 @@ public class SingleStepFragment extends Fragment{
 
     void releasePlayer() {
         if (mPlayer != null) {
+            stopBuffering();
+            ALog.d("Released Player and stoped Buffering");
             mPlayer.release();
             mPlayer = null;
         }
@@ -251,6 +224,7 @@ public class SingleStepFragment extends Fragment{
             outState.putLong(KEY_LAST_POSITION, mCurrentPosition);
             outState.putBoolean(KEY_LAST_PLAY_WHEN_READY, mPlayWhenReady);
             outState.putInt(KEY_CURRENT_WINDWOW_POSITION, mResumeWindow);
+            outState.putInt(KEY_LAST_STEP,mLastStep);
             ALog.d( "Putting values to onSavedInstanceState as ","mPlayWhenReady : " +mPlayWhenReady, "mCurrentPosition : " + mCurrentPosition);
         }
         super.onSaveInstanceState(outState);
@@ -264,6 +238,7 @@ public class SingleStepFragment extends Fragment{
             mCurrentPosition = mPlayer.getCurrentPosition();
             mPlayWhenReady = mPlayer.getPlayWhenReady();
             mResumeWindow = mPlayer.getCurrentWindowIndex();
+            mLastStep = currStep.getId();
             ALog.d( "Saving Data in variables as ","mPlayWhenReady : " +mPlayWhenReady, "mCurrentPosition : " + mCurrentPosition);
         }
         if (Util.SDK_INT <= 23) {
@@ -286,7 +261,7 @@ public class SingleStepFragment extends Fragment{
     public void onResume() {
         super.onResume();
         setBroadcastReceiver();
-        if (mPlayer == null) {
+        if (mPlayer == null && isVideoAvailable) {
             String userAgent = Util.getUserAgent(getContext(), getContext().getApplicationContext().getApplicationInfo().packageName);
             DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(userAgent, null, DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS, DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS, true);
             DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(getContext(), null, httpDataSourceFactory);
@@ -294,6 +269,9 @@ public class SingleStepFragment extends Fragment{
             ALog.d( "Getting Video Url as "+videoUri.toString());
             mVideoResource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(videoUri);
             initExoPlayer();
+            if (!isVideoAvailable){
+                stopBuffering();
+            }
         }
     }
 
@@ -313,14 +291,16 @@ public class SingleStepFragment extends Fragment{
     private void initExoPlayer() {
         getPlayerInstance();
         mPlayer.prepare(mVideoResource);
-        if (mCurrentPosition == 0) {
-            mPlayer.setPlayWhenReady(mPlayWhenReady);
-            ALog.d( "onCreateView: Creating new instance as ","mPlayWhenReady : " +mPlayWhenReady, "mCurrentPosition : " + mCurrentPosition);
-            mPlayerView.getPlayer().seekTo(mCurrentPosition);
+        if (mCurrentPosition == 0 || mLastStep != currStep.getId()) {
+            mPlayer.setPlayWhenReady(true);
+            startBuffering();
+            //ALog.d( "onCreateView: Creating new instance as ","mPlayWhenReady : " +mPlayWhenReady, "mCurrentPosition : " + mCurrentPosition);
+            mPlayerView.getPlayer().seekTo(0);
         } else{
+            startBuffering();
             mPlayer.setPlayWhenReady(mPlayWhenReady);
             ALog.d( "Getting values and Giving them to Start Activity as ","mPlayWhenReady : " +mPlayWhenReady, "mCurrentPosition : " + mCurrentPosition);
-            mPlayerView.getPlayer().seekTo(mCurrentPosition);
+            mPlayerView.getPlayer().seekTo(mResumeWindow,mCurrentPosition);
         }
         mPlayer.addListener(new Player.EventListener() {
             @Override
@@ -343,15 +323,14 @@ public class SingleStepFragment extends Fragment{
                 if ((playbackState == Player.STATE_READY) && playWhenReady) {
                     mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
                             mPlayer.getCurrentPosition(), 1f);
+                    stopBuffering();
                     //ALog.d( "onPlayerStateChanged: Playing Video Now");
                 } else if ((playbackState == Player.STATE_READY)) {
                     mStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
                             mPlayer.getCurrentPosition(), 1f);
                     //ALog.d( "onPlayerStateChanged: Video Paused just now");
-                } else if (playbackState == PlaybackStateCompat.STATE_CONNECTING) {
-                    Toast.makeText(getActivity(), "Connecting Please Wait...", Toast.LENGTH_SHORT).show();
-                } else if (playbackState == PlaybackStateCompat.STATE_BUFFERING) {
-                    Toast.makeText(getActivity(), "Buffering Now...", Toast.LENGTH_SHORT).show();
+                } else if (playbackState == Player.STATE_BUFFERING) {
+                    startBuffering();
                 }
                 if (mMediaSession != null) {
                     mMediaSession.setPlaybackState(mStateBuilder.build());
@@ -408,6 +387,7 @@ public class SingleStepFragment extends Fragment{
             mPlayerView.setVisibility(GONE);
             imageError.setVisibility(VISIBLE);
             scrollView.setVisibility(VISIBLE);
+            //stopBuffering();
         } else {
             imageError.setVisibility(GONE);
             mPlayerView.setVisibility(VISIBLE);
@@ -422,6 +402,20 @@ public class SingleStepFragment extends Fragment{
         description.setText(currStep.getDescription());
         mPlayerView.setDefaultArtwork(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.appwidget_preview));
         initViewConfig();
+    }
+
+    private void startBuffering(){
+        if(isVideoAvailable && progressBuffer.getVisibility() == GONE){
+            progressBuffer.setVisibility(VISIBLE);
+            ALog.d("Starting Buffering Now");
+            Toast.makeText(getActivity(), "PLEASE WAIT Video is buffering Now...", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void stopBuffering(){
+        //Toast.makeText(getActivity(), "Buffering Now...", Toast.LENGTH_SHORT).show();
+        progressBuffer.setVisibility(GONE);
+        ALog.d("Buffering Finished ...Ready Now");
     }
 
     public void initALog() {

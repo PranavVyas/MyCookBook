@@ -1,4 +1,4 @@
-package com.vyas.pranav.mycookbook;
+package com.vyas.pranav.mycookbook.ui;
 
 import android.app.PictureInPictureParams;
 import android.content.res.Configuration;
@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.vyas.pranav.mycookbook.R;
 import com.vyas.pranav.mycookbook.modelsutils.MainStepsModel;
 import com.vyas.pranav.mycookbook.ui.SingleStepFragment;
 

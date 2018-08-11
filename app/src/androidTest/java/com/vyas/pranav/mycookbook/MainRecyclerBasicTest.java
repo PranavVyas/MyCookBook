@@ -5,19 +5,16 @@ import android.app.Instrumentation;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.test.runner.intent.IntentStubber;
 
-import com.vyas.pranav.mycookbook.recyclerutils.MainListAdapter;
-import com.vyas.pranav.mycookbook.recyclerutils.MainListAdapter$MainListItemHolder_ViewBinding;
+import com.vyas.pranav.mycookbook.ui.MainActivity;
+import com.vyas.pranav.mycookbook.ui.RecepieDescriptionActivity;
+import com.vyas.pranav.mycookbook.ui.SingleStepActivity;
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 
@@ -25,7 +22,6 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.isInternal;
-import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;

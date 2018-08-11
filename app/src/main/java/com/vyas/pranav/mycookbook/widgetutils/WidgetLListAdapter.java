@@ -1,28 +1,20 @@
-package com.vyas.pranav.mycookbook.extrautils;
+package com.vyas.pranav.mycookbook.widgetutils;
 
-import android.app.LauncherActivity;
-import android.app.PendingIntent;
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-import android.widget.Toast;
 
 import com.blankj.ALog;
 import com.google.gson.Gson;
 import com.vyas.pranav.mycookbook.BuildConfig;
-import com.vyas.pranav.mycookbook.MainActivity;
 import com.vyas.pranav.mycookbook.R;
-import com.vyas.pranav.mycookbook.RecepieDescriptionActivity;
+import com.vyas.pranav.mycookbook.extrautils.SharedPrefs;
 import com.vyas.pranav.mycookbook.modelsutils.MainIngrediantsModel;
 import com.vyas.pranav.mycookbook.modelsutils.MainRecepieModel;
 
 import java.util.List;
-
-import static com.vyas.pranav.mycookbook.recyclerutils.MainListAdapter.KEY_SINGLE_RECEPIE_JSON;
 
 public class WidgetLListAdapter implements RemoteViewsService.RemoteViewsFactory {
     private static final String TAG = "WidgetLListAdapter";

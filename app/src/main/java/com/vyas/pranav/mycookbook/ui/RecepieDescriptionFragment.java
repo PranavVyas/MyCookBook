@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.vyas.pranav.mycookbook.R;
@@ -27,7 +26,7 @@ import at.blogc.android.views.ExpandableTextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.vyas.pranav.mycookbook.RecepieDescriptionActivity.KEY_BOOLEAN_TWO_PANE;
+import static com.vyas.pranav.mycookbook.ui.RecepieDescriptionActivity.KEY_BOOLEAN_TWO_PANE;
 import static com.vyas.pranav.mycookbook.recyclerutils.MainListAdapter.KEY_SINGLE_RECEPIE_JSON;
 
 public class RecepieDescriptionFragment extends Fragment {

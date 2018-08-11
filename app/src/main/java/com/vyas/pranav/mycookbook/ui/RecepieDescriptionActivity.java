@@ -1,4 +1,4 @@
-package com.vyas.pranav.mycookbook;
+package com.vyas.pranav.mycookbook.ui;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.vyas.pranav.mycookbook.R;
 import com.vyas.pranav.mycookbook.modelsutils.MainRecepieModel;
 import com.vyas.pranav.mycookbook.modelsutils.MainStepsModel;
 import com.vyas.pranav.mycookbook.ui.RecepieDescriptionFragment;

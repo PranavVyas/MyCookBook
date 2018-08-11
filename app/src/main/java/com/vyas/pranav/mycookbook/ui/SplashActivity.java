@@ -1,25 +1,12 @@
 package com.vyas.pranav.mycookbook.ui;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.ANRequest;
-import com.androidnetworking.common.ANResponse;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.DownloadProgressListener;
-import com.androidnetworking.utils.Utils;
-import com.vyas.pranav.mycookbook.MainActivity;
 import com.vyas.pranav.mycookbook.R;
-import com.vyas.pranav.mycookbook.modelsutils.MainRecepieModel;
-
-import java.util.List;
-
-import okhttp3.Response;
 
 public class SplashActivity extends AppCompatActivity {
     private static final String TAG = "SplashActivity";

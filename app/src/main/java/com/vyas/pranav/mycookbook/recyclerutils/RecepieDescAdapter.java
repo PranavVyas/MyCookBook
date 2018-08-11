@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.vyas.pranav.mycookbook.R;
-import com.vyas.pranav.mycookbook.SingleStepActivity;
+import com.vyas.pranav.mycookbook.ui.SingleStepActivity;
 import com.vyas.pranav.mycookbook.modelsutils.MainRecepieModel;
 
 import butterknife.BindView;

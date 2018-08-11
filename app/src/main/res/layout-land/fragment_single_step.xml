@@ -27,6 +27,12 @@
             app:fastforward_increment="1000"
             app:controller_layout_id="@layout/exoplayer_controls"
             app:rewind_increment="1000"/>
+        <ProgressBar
+            android:id="@+id/progress_buffering_single_step_frag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="120dp"
+            android:visibility="gone"/>
     </FrameLayout>
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/scroll_single_step"
